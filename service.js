@@ -1,19 +1,14 @@
-// color-service.js
-var Seneca = require('seneca');
-
+const Seneca = require('seneca');
 const deserializeArgs = require('./deserializeArgs');
-
 const uuidv1 = require('uuid/v1'); 
+const {Subject} = require('rxjs');
  
 Seneca()
-  // Uncomment to get detailed logs
-  // .test('print')
-
   .add('role:app', function (msg, reply) {
     const id = uuidv1();
-
-    this.add(`role:fw,cmd:createActor,actorId:${id}`, (msg, resolve) => {
-      console.log('Hello World!');
+    console.log(id)
+    Seneca()
+    .add(`role:fw,cmd:createActor,actorId:${id}`, (msg, resolve) => {
       const m = deserializeArgs(msg.d);
       const s = new Subject();
 
@@ -28,21 +23,17 @@ Seneca()
           result = resp;
       });
 
-      s.next(msg.data);
-
+      s.next(msg.value);
       s.complete();
-
-      resolve({value:result});
+      resolve({val:result});
     
     }).use('mesh', {
-      isbase: false,
+      isbase:false,
       pin: `role:fw,cmd:createActor,actorId:${id}`
-  })
+    })
     reply({pattern:`role:fw,cmd:createActor,actorId:${id}`});
   })
- 
-  // load the mesh plugin
   .use('mesh', {
-    isbase: true,
+    isbase:false,
     pin: 'role:app'
   })
