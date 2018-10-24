@@ -1,7 +1,7 @@
 const seneca = require('seneca');
 
 seneca()
-.use('mesh',{
-  base:true,
-  monitor:true
-})
+  .use('mesh', {
+    base: true,
+    monitor: true
+  })
