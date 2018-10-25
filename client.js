@@ -33,7 +33,7 @@ seneca
   .use('mesh')
   .act('role:fw,cmd:creatActor',{data:serializeArgs(data),id:id1}, function (err, out) { //passing id1 so that it is returned in seneca.add to client
     values.forEach(element => {
-        Seneca()
+        seneca
         .use('mesh')
         .ready(function () {
           this.act(`role:app,type:actor,actorId:${out.id}`,{value:element} ,(err, response) => {

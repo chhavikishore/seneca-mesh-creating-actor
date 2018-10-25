@@ -1,9 +1,9 @@
-const Seneca = require('seneca');
+const Seneca = require('seneca')();
 const deserializeArgs = require('./deserializeArgs');
 const uuidv1 = require('uuid/v1');
 const { Subject } = require('rxjs');
 
-Seneca()
+Seneca
   .add('role:fw,cmd:creatActor', function (msg, reply) {
     const id = uuidv1(); //id2 creation
     // console.log("id2 : ", id);
@@ -23,7 +23,7 @@ Seneca()
 
     s1.subscribe(
       (resp) => {
-        Seneca()
+        Seneca
           .use('mesh')
           .act(`role:app,type:actor,actorId:${msg.id}`, { res: resp }, function (err, out) { 
             //passing id1  
@@ -40,7 +40,7 @@ Seneca()
 
     // s1.next(1);
 
-    Seneca()
+    Seneca
       .add(`role:app,type:actor,actorId:${id}`, (message, resolve) => { //in pattern its id2
         //console.log(msg.id); //it is id1
         // console.log('actor called');
