@@ -27,25 +27,26 @@ const values = [{
   complete:true
 }];
 
+const seneca = Seneca({ log: 'test' });
 
-Seneca({ log: 'test' })
+seneca
   .use('mesh')
-  .act('role:fw,cmd:creatActor',{id:id1}, function (err, out) { //passing id1 so that it is returned in seneca.add to client
+  .act('role:fw,cmd:creatActor',{data:serializeArgs(data),id:id1}, function (err, out) { //passing id1 so that it is returned in seneca.add to client
     values.forEach(element => {
-      Seneca({ log: 'test' })
+        Seneca()
         .use('mesh')
         .ready(function () {
-          this.act(`role:app,type:actor,actorId:${out.id}`,{data:serializeArgs(data),value:element} ,(err, response) => {
+          this.act(`role:app,type:actor,actorId:${out.id}`,{value:element} ,(err, response) => {
             console.log('Response of actor receiving values :', response);
           }); 
         })
     });
   });
 
-  Seneca().add(`role:app,type:actor,cmd:print,actorId:${id1}`,function(data,reply){
+ seneca.add(`role:app,type:actor,actorId:${id1}`,function(data,reply){
     console.log("response from actor with bussiness logic : ",data.res);
     reply({value:"reply via bussiness logic add method"})
   })
   .use('mesh',{
-    pin:`role:app,type:actor,cmd:print,actorId:${id1}`,
+    pin:`role:app,type:actor,actorId:${id1}`,
   })
