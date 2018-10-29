@@ -1,12 +1,12 @@
-const Seneca = require('seneca')();
+const Seneca = require('seneca');
 const deserializeArgs = require('./deserializeArgs');
 const uuidv1 = require('uuid/v1');
 const { Subject } = require('rxjs');
 
-Seneca
+Seneca()
   .add('role:fw,cmd:creatActor', function (msg, reply) {
     const id = uuidv1(); //id2 creation
-    // console.log("id2 : ", id);
+    console.log("id2 : ", id);
     const m = deserializeArgs(msg.data);
     let s = new Subject();
     let s1 = new Subject();
@@ -23,34 +23,29 @@ Seneca
 
     s1.subscribe(
       (resp) => {
-        Seneca
+        Seneca()
           .use('mesh')
-          .act(`role:app,type:actor,actorId:${msg.id}`, { res: resp }, function (err, out) { 
-            //passing id1  
+          .act(`role:app,type:actor,actorId:${msg.id}`, { res: resp }, function (err, out) { //passing id1  
             console.log("Inside service subscribe which is passed to client add : ", out);
           });
       },
       (err) => {
-        console.log(err)
+        console.log("error in subscribe ",err)
       },
       (complete) => {
-        console.log(complete)
+        console.log("subscribe completed :",complete)
       }
     );
 
-    // s1.next(1);
-
-    Seneca
+    Seneca()
       .add(`role:app,type:actor,actorId:${id}`, (message, resolve) => { //in pattern its id2
-        //console.log(msg.id); //it is id1
-        // console.log('actor called');
         if (message.value.hasOwnProperty("error")) {
           s1.error("error occurred");
           resolve({ val: 'some error occured' });
         } else if (message.value.hasOwnProperty("next")) {
           s1.next(message.value.next);
           resolve({ val: 'next value received' });
-        } else if (message.value.hasOwnProperty("complete")) {
+        } else {
           s1.complete();
           resolve({ val: 'completed' });
         }
