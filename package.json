@@ -20,6 +20,7 @@
     "seneca-balance-client": "0.6.0",
     "seneca-mesh": "0.10.0",
     "seneca-transport": "^2.3.0",
+    "static-eval": "^2.0.0",
     "uuid": "^3.3.2"
   }
 }
