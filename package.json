@@ -12,6 +12,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
     "chai": "^4.2.0",
+    "lodash": "^4.17.11",
     "mocha": "^5.2.0",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",
